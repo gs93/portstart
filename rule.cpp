@@ -1,6 +1,6 @@
 #include "rule.hpp"
 
-rule::rule(const std::string &name, std::initializer_list<int> ports, const std::string &exec, const std::string &user)
+rule::rule(const std::string &name, std::vector<int> ports, const std::string &exec, const std::string &user)
     : _name(name), _sockfd(0), _exec(exec), _user(user), _closed(false)
 {
     for (int p : ports)

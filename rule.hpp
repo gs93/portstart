@@ -1,7 +1,6 @@
 #ifndef RULE_HPP
 #define RULE_HPP
 
-#include <initializer_list>
 #include <string>
 #include <thread>
 #include <vector>
@@ -15,7 +14,7 @@
 
 class rule {
 public:
-    rule(const std::string &name, std::initializer_list<int> ports, const std::string &exec, const std::string &user = "");
+    rule(const std::string &name, std::vector<int> ports, const std::string &exec, const std::string &user = "");
     ~rule();
 
     std::string name();
