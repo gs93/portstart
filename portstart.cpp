@@ -1,11 +1,15 @@
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <list>
+#include <sstream>
+#include <string>
 #include <thread>
 #include <vector>
 
 #include <sys/select.h>
 
+#include "iniparser/iniparser.hpp"
 #include "rule.hpp"
 
 int getSender(fd_set *fds)
@@ -16,14 +20,35 @@ int getSender(fd_set *fds)
     return i;
 }
 
-void addRule(const std::string &name, std::initializer_list<int> ports, const std::string &exec, std::vector<rule *> &rules, int &fdmax)
+void addRule(rule *r, std::vector<rule *> &rules, int &fdmax)
 {
-    rule *r = new rule(name, ports, exec);
     rules.push_back(r);
     for (int fd : r->sockfd()) {
         if (fd > fdmax)
             fdmax = fd;
     }
+}
+
+void addRule(const std::string &name, std::initializer_list<int> ports, const std::string &exec, std::vector<rule *> &rules, int &fdmax)
+{
+    addRule(new rule(name, ports, exec), rules, fdmax);
+}
+
+rule *parseFile(const std::string &file)
+{
+    iniparser ini(file);
+
+    std::vector<int> ports;
+    {
+        std::vector<std::string> strPorts;
+        std::istringstream iss(ini.getString("", "port"));
+        std::copy(std::istream_iterator<std::string>(iss),
+                std::istream_iterator<std::string>(),
+                std::back_inserter<std::vector<std::string> >(strPorts));
+        for (std::string s : strPorts)
+            ports.push_back(std::strtol(s.c_str(), 0, 10));
+    }
+    return new rule(file, ports, ini.getString("", "exec"), ini.getString("", "user"));
 }
 
 int main()
@@ -34,7 +59,7 @@ int main()
     std::vector<rule *> rules;
     int fdmax = 0;
 
-    addRule("httpd", { 80, 443 }, "systemctl start httpd.service", rules, fdmax);
+    addRule(parseFile("httpd.ini"), rules, fdmax);
     addRule("mysqld", { 3306 }, "systemctl start mysqld.service", rules, fdmax);
     addRule("tomcat", { 8080 }, "systemctl start tomcat7.service", rules, fdmax);
     addRule("test", { 8000 }, "touch /tmp/portstart-8000", rules, fdmax);
