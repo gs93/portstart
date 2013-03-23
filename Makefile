@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -Weffc++ -pedantic -std=c++11 -pthread -O3
+CXXFLAGS = -Wall -Wextra -Weffc++ -pedantic -std=c++11 -pthread -g -O3
 RM = rm -f
 CP = cp
 SRC = portstart.cpp rule.cpp
