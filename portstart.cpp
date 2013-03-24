@@ -7,6 +7,7 @@
 #include <thread>
 #include <vector>
 
+#include <dirent.h>
 #include <sys/select.h>
 
 #include "iniparser/iniparser.hpp"
@@ -49,6 +50,24 @@ rule *parseFile(const std::string &file)
             ports.push_back(std::strtol(s.c_str(), 0, 10));
     }
     return new rule(file, ports, ini.getString("", "exec"), ini.getString("", "user"));
+}
+
+bool parseFolder(const std::string &path)
+{
+    std::cout << "parse folder " << path << std::endl;
+
+    DIR *dir;
+    struct dirent *ent;
+    if ((dir = opendir(path.c_str()))) {
+        while ((ent = readdir(dir))) {
+            // only parse when it's a file or symlink
+            if (ent->d_type == DT_REG || ent->d_type == DT_LNK)
+                parseFile(ent->d_name);
+        }
+        closedir(dir);
+        return true;
+    }
+    return false;
 }
 
 int main()
