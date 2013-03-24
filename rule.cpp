@@ -49,6 +49,7 @@ std::thread *rule::execute()
     std::string cmd = _exec;
     if (!_user.empty())
         cmd = "su " + _user + " -c \"" + _exec + "\"";
+    std::cout << "execute: " << cmd << std::endl;
     return new std::thread(system, cmd.c_str());
 }
 
