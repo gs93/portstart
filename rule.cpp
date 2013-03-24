@@ -63,6 +63,8 @@ void rule::closeSock()
 
 void rule::openSock(int port)
 {
+    std::cout << "open socket on port " << port << std::endl;
+
     struct sockaddr_in serv_addr; 
     
     int fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -78,6 +80,7 @@ void rule::openSock(int port)
 
     if (bind(fd, (struct sockaddr *) &serv_addr,
                 sizeof(serv_addr)) < 0) {
+        std::cerr << "..failed" << std::endl;
         closeSock();
         return;
     }

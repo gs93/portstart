@@ -18,6 +18,7 @@
 #ifndef RULE_MANAGER_HPP
 #define RULE_MANAGER_HPP
 
+#include <iostream>
 #include <iterator>
 #include <sstream>
 #include <string>

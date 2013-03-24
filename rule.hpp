@@ -18,6 +18,7 @@
 #ifndef RULE_HPP
 #define RULE_HPP
 
+#include <iostream>
 #include <string>
 #include <thread>
 #include <vector>

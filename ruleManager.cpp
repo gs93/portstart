@@ -42,6 +42,7 @@ bool ruleManager::addRule(const std::string &name, std::vector<int> ports,
 
 bool ruleManager::parseFile(const std::string &file)
 {
+    std::cout << "parsing file " << file << std::endl;
     iniparser ini(file);
     std::vector<int> ports;
     {
@@ -58,17 +59,19 @@ bool ruleManager::parseFile(const std::string &file)
 
 bool ruleManager::parseFolder(const std::string &path)
 {
+    std::cout << "parsing " << path << std::endl;
     DIR *dir;
     struct dirent *ent;
     if ((dir = opendir(path.c_str()))) {
         while ((ent = readdir(dir))) {
             // only parse when it's a file or symlink
             if (ent->d_type == DT_REG || ent->d_type == DT_LNK)
-                parseFile(ent->d_name);
+                parseFile(path + "/" + ent->d_name);
         }
         closedir(dir);
         return true;
     }
+    std::cerr << "parsing " << path << " failed!" << std::endl;
     return false;
 }
 
