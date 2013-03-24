@@ -22,8 +22,16 @@ install: all
 	mkdir -p "${DESTDIR}${PREFIX}/bin"
 	$(CP) "${NAME}" "${DESTDIR}${PREFIX}/bin"
 	chmod 755 "${DESTDIR}${PREFIX}/bin/${NAME}"
+	mkdir -p "${DESTDIR}${PREFIX}/etc/portstart"
+
+install-examples:
+	$(CP) examples/*.ini "${DESTDIR}${PREFIX}/etc/portstart"
 
 uninstall:
 	$(RM) "${DESTDIR}${PREFIX}/bin/${NAME}"
+	rmdir "${DESTDIR}${PREFIX}/etc/portstart"
 
-.PHONY: all clean install uninstall
+uninstall-examples:
+	$(RM) "${DESTDIR}${PREFIX}/etc/portstart/*"
+
+.PHONY: all clean install install-examples uninstall uninstall-examples
