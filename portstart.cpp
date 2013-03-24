@@ -41,10 +41,10 @@ int main()
 
     std::cout << "init rules" << std::endl;
 
-    ruleManager::parseFile("httpd.ini");
-    ruleManager::addRule("mysqld", { 3306 }, "systemctl start mysqld.service");
-    ruleManager::addRule("tomcat", { 8080 }, "systemctl start tomcat7.service");
-    ruleManager::addRule("test", { 8000 }, "touch /tmp/portstart-8000");
+    if(!ruleManager::parseFolder(PREFIX "/etc/portstart")) {
+        std::cerr << PREFIX "/etc/portstart" << " couldn't be read!" << std::endl;
+    }
+    //ruleManager::addRule("test", { 8000 }, "touch /tmp/portstart-8000");
 
     std::list<std::thread *> threads;
     while (ruleManager::rules().size()) {

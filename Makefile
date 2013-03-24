@@ -10,7 +10,7 @@ SRC := $(wildcard *.cpp) iniparser/iniparser.cpp
 OBJ = $(patsubst %.cpp,%.o,$(SRC))
 
 %.o: %.cpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -DPREFIX="\"$(PREFIX)\"" -c -o $@ $<
 
 ${NAME} : $(OBJ)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) ${LDFLAGS} $^ -o $@
